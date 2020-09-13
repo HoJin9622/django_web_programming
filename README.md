@@ -3,13 +3,13 @@
 ## 시작
 
 ```bash
-python -m virtualenv mysite
+$ python -m virtualenv mysite
 
-call scripts/activate
+$ call scripts/activate
 
-pip install django
+$ pip install django
 
-django-admin startproject mysite
+$ django-admin startproject mysite
 ```
 
 프로젝트 생성
@@ -29,7 +29,7 @@ django-admin startproject mysite
 - logs 디렉토리 : 프로젝트를 진행하면서 추가된다. 로그 파일들이 들어있따. 로그 파일의 위치는 settings.py 파일의 LOGGING 항목으로 지정한다.
 
 ```bash
-python manage.py startapp polls
+$ python manage.py startapp polls
 ```
 
 polls라는 애플리케이션 디렉토리와 그 하위에 필요한 파일들을 생성해준다.
@@ -54,7 +54,7 @@ ALLOWED_HOSTS 항목을 지정한다.
 
 모듈명인 polls 만 등록해도 되지만, 애플리케이션의 설정 클래스로 등록하는 것이 더 정확한 방법이다.
 
-```py
+```python
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -72,7 +72,7 @@ INSTALLED_APPS = [
 
 다른 데이터베이스 엔진으로 변경하고 싶다면 settings.py 파일에서 수정해주면 된다.
 
-```py
+```python
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -85,6 +85,38 @@ DATABASES = {
 
 최초에는 세계표준시로 되어있는데, 한국시간으로 변경한다.
 
-```py
+```python
 TIME_ZONE = "Asia/Seoul"
 ```
+
+## 기본 테이블 생성
+
+```bash
+$ python manage.py migrate
+```
+
+migrate 명령은 데이터베이스에 변경사항이 있을 때 이를 반영해주는 명렁이다.
+
+## 웹 서버 실행
+
+```
+$ python manage.py runserver 0.0.0.0:8000
+```
+
+명령 입력 시 자신의 서버에 맞는 IP 주소와 포트번호를 입력하면 된다.
+
+위 명령에서 0.0.0.0 이란 IP 주소의 의미는 현재 명령을 실행 중인 서버의 IP주소가 무엇으로 설정되어 있더라도 그와는 무관하게 웹 접속 요청을 받겠다는 의미이다.
+
+## Admin 사이트
+
+http://localhost:8000/admin
+
+위 주소로 접속하면 Admin 사이트의 로그인 페이지가 나온다.
+
+로그인하려면 Username, Password를 넣어야 되는데 생성해야한다.
+
+```bash
+$ python manage.py createsuperuser
+```
+
+화면 지시에 따라 Username/Email/Password/Password(again)을 입력해서 관리자를 생성한다.
