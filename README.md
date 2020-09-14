@@ -1,3 +1,5 @@
+## 개발환경
+
 ```bash
 $ pip3 install pipenv
 ```
@@ -15,6 +17,8 @@ $ pipenv install django djangorestframework django-restknox
 ```bash
 $ django-admin startproject leadmanager
 ```
+
+## leads 생성 model 정의
 
 ```bash
 $ cd leadmanager
@@ -40,4 +44,64 @@ $ python manage.py makemigrations leads
 
 ```bash
 $ python manage.py migrate
+```
+
+## Serializers
+
+```python
+from rest_framework import serializers
+from leads.models import Lead
+
+# Lead Serializer
+class LeadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lead
+        fields = "__all__"
+```
+
+leadmanager > leads > serializers.py
+
+## api
+
+```python
+from leads.models import Lead
+from rest_framework import viewsets, permissions
+from .serializers import LeadSerializer
+
+# Lead Viewset
+class LeadViewSet(viewsets.ModelViewSet):
+    queryset = Lead.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = LeadSerializer
+```
+
+leadmanager > leads > api.py
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path("", include("leads.urls")),
+]
+```
+
+leadmanager > leadmanager > urls.py 변경
+
+```python
+from rest_framework import routers
+from .api import LeadViewSet
+
+router = routers.DefaultRouter()
+router.register("api/leads", LeadViewSet, "leads")
+
+urlpatterns = router.urls
+```
+
+leadmanager > leads > urls.py 생성
+
+## 실행
+
+```bash
+$ python manage.py runserver
 ```
