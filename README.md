@@ -11,7 +11,7 @@ $ pipenv shell
 프로젝트 폴더에서 실행
 
 ```bash
-$ pipenv install django djangorestframework django-restknox
+$ pipenv install django djangorestframework django-rest-knox
 ```
 
 ```bash
