@@ -26,6 +26,21 @@ $ python manage.py startapp leads
 ```
 
 ```python
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "leads",
+    "rest_framework",
+]
+```
+
+INSTALLED_APPS에 leads와 rest_framework 추가
+
+```python
 from django.db import models
 
 
