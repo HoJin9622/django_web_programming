@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { getLeads } from "../actions/leads";
+import { useSelector, useDispatch } from "react-redux";
+import { getLeads, deleteLead } from "../actions/leads";
 
-const Leads = (props) => {
+const Leads = () => {
+  const dispatch = useDispatch();
+  const leads = useSelector((state) => state.leads.leads);
+
   useEffect(() => {
-    props.getLeads();
-  }, []);
+    dispatch(getLeads());
+  }, [dispatch]);
 
   return (
     <>
@@ -20,14 +23,16 @@ const Leads = (props) => {
           </tr>
         </thead>
         <tbody>
-          {props.leads.map((lead) => (
+          {leads?.map((lead) => (
             <tr key={lead.id}>
               <td>{lead.id}</td>
               <td>{lead.name}</td>
               <td>{lead.email}</td>
               <td>{lead.message}</td>
               <td>
-                <button>Delete</button>
+                <button onClick={() => dispatch(deleteLead(lead.id))}>
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -37,8 +42,4 @@ const Leads = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  leads: state.leads.leads,
-});
-
-export default connect(mapStateToProps, { getLeads })(Leads);
+export default Leads;
