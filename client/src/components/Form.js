@@ -18,6 +18,9 @@ const Form = () => {
     };
 
     dispatch(addLead(lead));
+    setName("");
+    setEmail("");
+    setMessage("");
   };
 
   return (

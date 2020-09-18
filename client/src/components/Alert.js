@@ -5,24 +5,39 @@ import "react-toastify/dist/ReactToastify.css";
 
 export const Alert = () => {
   const error = useSelector((state) => state.errors);
-  const alertOption = {
-    position: "top-center",
-    autoClose: 3000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  };
+  const message = useSelector((state) => state.messages);
 
   useEffect(() => {
+    const alertOption = {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
     if (error.msg.name)
       toast.error(`❌ Name : ${error.msg.name.join()}`, alertOption);
     if (error.msg.email)
       toast.error(`❌ Email : ${error.msg.email.join()}`, alertOption);
     if (error.msg.message)
       toast.error(`❌ Message : ${error.msg.message.join()}`, alertOption);
-  }, [error, alertOption]);
+  }, [error]);
+
+  useEffect(() => {
+    const alertOption = {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+    if (message.deleteLead) toast.success(`${message.deleteLead}`, alertOption);
+    if (message.addLead) toast.success(`${message.addLead}`, alertOption);
+  }, [message]);
 
   return (
     <ToastContainer
