@@ -120,3 +120,83 @@ leadmanager > leads > urls.py 생성
 ```bash
 $ python manage.py runserver
 ```
+
+## 장고 유저인증
+
+```python
+from django.db import models
+from django.contrib.auth.models import User
+
+
+class Lead(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
+    message = models.CharField(max_length=500, blank=True)
+    owner = models.ForeignKey(
+        User, related_name="leads", on_delete=models.CASCADE, null=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+```
+
+`from django.contrib.auth.models import User` 를 추가한 후
+
+```python
+owner = models.ForeignKey(
+        User, related_name="leads", on_delete=models.CASCADE, null=True
+    )
+```
+
+Lead 모델에 owner를 추가한다.
+
+```bash
+python manage.py makemigrations leads
+```
+
+leads를 makemigrations를 해준 후
+
+```bash
+python manage.py migrate
+```
+
+migrate를 해준다.
+
+```python
+from leads.models import Lead
+from rest_framework import viewsets, permissions
+from .serializers import LeadSerializer
+
+
+class LeadViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    serializer_class = LeadSerializer
+
+    def get_queryset(self):
+        return self.request.user.leads.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+```
+
+그 후 leadmanage > leads > api.py 를 위와 같이 수정한다.
+
+```python
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "leads",
+    "rest_framework",
+    "corsheaders",
+    "knox",
+]
+
+REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication")}
+```
+
+leadmanager > settings.py 의 INSTALLED_APPS 와 REST_FRAMEWORK를 위와 같이 수정한다.
+
+그 후 `python manage.py migrate`를 다시 해준다.
